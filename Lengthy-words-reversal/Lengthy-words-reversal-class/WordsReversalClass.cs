@@ -2,41 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace Lengthy_words_reversal.Lengthy_words_reversal_class
 {
     internal static class WordsReversalClass
     {
-        public static string ReversWords(string? innerStr) 
+        public static List<string> ReversWords(string? innerStr) 
         {
-
-            if (innerStr?.Length < 5 || string.IsNullOrEmpty(innerStr) || string.IsNullOrWhiteSpace(innerStr))
+            if (innerStr?.Length < 5 )
             {
-                return innerStr ?? string.Empty;
+                return new List<string>() { innerStr };
             }
 
-            string outer = innerStr.TrimEnd().TrimStart();
-
-            string[] words = outer.Split(' ');
-
-            outer = string.Empty;
-
-            foreach (string word in words)
+            if (string.IsNullOrWhiteSpace(innerStr)) 
             {
-                if (word.Length < 5)
-                {
-                    outer += " " + word;
-                }
-                else 
-                {
-                    char[] chars = word.ToCharArray();
-                    Array.Reverse(chars);
-                    outer += " " + new string(chars);
-                }
+                throw new Exception("Empty string!");
             }
 
-            return outer;
+            var outer = innerStr.TrimEnd().TrimStart().Split(' ').ToList();
+
+            var reversed = outer.Select(selector => selector.Length > 5 ? new string(selector.Reverse().ToArray()) : selector).ToList();
+
+            return reversed;
+        }
+
+        public static void Show(List<string> strings) 
+        {
+            Console.WriteLine();
+            foreach (var s in strings)
+            {
+                Console.Write($"{s} ");
+            }
+            Console.WriteLine();
         }
     }
 }
